@@ -18,6 +18,15 @@ for I in uncompressed/*.dat; do
 	echo "$BASE.lzma_raw"
 	xz --format=raw <$I >compressed/$BASE.lzma_raw
 
+	echo "$BASE.lz4"
+	lz4 --best -BD <$I >compressed/$BASE.lz4
+
+	echo "$BASE.br"
+	brotli -f -o compressed/$BASE.br $I
+
 	echo "$BASE.zst"
-	zstd <$I >compressed/$BASE.zst
+	zstd --ultra -22 -f -o compressed/$BASE.zst --format=zstd $I
+
+	echo "$BASE.lzham"
+	lzhamtest -m4 -d29 -u -x -o -e -h0 c $I compressed/$BASE.lzham
 done
